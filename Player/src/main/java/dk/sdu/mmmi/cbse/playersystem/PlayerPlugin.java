@@ -19,6 +19,12 @@ public class PlayerPlugin implements IGamePluginService {
         world.addEntity(player);
     }
 
+    @Override
+    public void stop(GameData gameData, World world) {
+        // Remove entities
+        world.removeEntity(player);
+    }
+
     private Entity createPlayerShip(GameData gameData) {
         Entity playerShip = new Player();
         playerShip.setPolygonCoordinates(
@@ -30,11 +36,5 @@ public class PlayerPlugin implements IGamePluginService {
         playerShip.setX((double) gameData.getDisplayHeight() / 2);
         playerShip.setY((double) gameData.getDisplayWidth() / 2);
         return playerShip;
-    }
-
-    @Override
-    public void stop(GameData gameData, World world) {
-        // Remove entities
-        world.removeEntity(player);
     }
 }
