@@ -44,8 +44,9 @@ public class AsteroidPlugin implements IGamePluginService {
                 (random.nextInt(2, 25)), (random.nextInt(2, 25)),
                 -(random.nextInt(2, 25)), (random.nextInt(2, 25))
         );
-        asteroid.setX((double) gameData.getDisplayHeight() / 2);
-        asteroid.setY((double) gameData.getDisplayWidth() / 2);
+        asteroid.setX((double) gameData.getDisplayHeight() / 4);
+        asteroid.setY((double) gameData.getDisplayWidth() / 4);
+        asteroid.setLife(3);
         return asteroid;
     }
 }

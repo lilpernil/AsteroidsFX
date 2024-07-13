@@ -1,6 +1,7 @@
 package dk.sdu.mmmi.cbse.common.data;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.UUID;
 
 public class Entity implements Serializable {
@@ -11,6 +12,8 @@ public class Entity implements Serializable {
     private double x;
     private double y;
     private double rotation;
+    private int life;
+    private boolean hit;
             
 
     public String getID() {
@@ -51,6 +54,28 @@ public class Entity implements Serializable {
     public double getRotation() {
         return rotation;
     }
-        
 
+    public double getEntityRadius() {
+        return Arrays.stream(polygonCoordinates).max().getAsDouble();
+    }
+
+    public Entity() {
+        this.life = 1;
+    }
+
+    public int getLife() {
+        return life;
+    }
+
+    public void setLife(int life) {
+        this.life = life;
+    }
+
+    public boolean isHit() {
+        return hit;
+    }
+
+    public void setHit(boolean hit) {
+        this.hit = hit;
+    }
 }

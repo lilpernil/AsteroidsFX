@@ -11,7 +11,7 @@ public class AsteroidControlSystem implements IEntityProcessingService {
 
     private Random random = new Random();
 
-    //private AsteroidPlugin asteroidPlugin = new AsteroidPlugin();
+    private AsteroidPlugin asteroidPlugin = new AsteroidPlugin();
 
     @Override
     public void process(GameData gameData, World world) {
@@ -31,20 +31,40 @@ public class AsteroidControlSystem implements IEntityProcessingService {
                 asteroid.setX(1);
                 asteroid.setRotation(asteroid.getRotation() - 5);
             }
-
             if (asteroid.getX() > gameData.getDisplayWidth()) {
                 asteroid.setX(gameData.getDisplayWidth() - 1);
                 asteroid.setRotation(asteroid.getRotation() - 5);
             }
-
             if (asteroid.getY() < 0) {
                 asteroid.setY(1);
                 asteroid.setRotation(asteroid.getRotation() + 5);
             }
-
             if (asteroid.getY() > gameData.getDisplayHeight()) {
                 asteroid.setY(gameData.getDisplayHeight() - 1);
                 asteroid.setRotation(asteroid.getRotation() + 5);
+            }
+            if (asteroid.isHit() && asteroid.getLife() > 0) {
+                double[] coordinates = asteroid.getPolygonCoordinates();
+
+                for (int i = 0; i < 2; i++) {
+                    double[] updatedCoordinates = new double[coordinates.length];
+                    for (int j = 0; j < coordinates.length; j++) {
+                        updatedCoordinates[j] = coordinates[j] - random.nextInt(1,5);
+                        if (updatedCoordinates[j] <= 2) {
+                            updatedCoordinates[j] = 2;
+                        }
+                    }
+                    Entity newAsteroid = asteroidPlugin.createAsteroid(gameData);
+                    newAsteroid.setPolygonCoordinates(updatedCoordinates);
+                    newAsteroid.setX(asteroid.getX());
+                    newAsteroid.setY(asteroid.getY());
+                    newAsteroid.setLife(asteroid.getLife() - 1);
+                    world.addEntity(newAsteroid);
+                }
+                world.removeEntity(asteroid);
+            }
+            if (asteroid.getLife() == 0) {
+                world.removeEntity(asteroid);
             }
         }
     }

@@ -21,6 +21,7 @@ import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -30,7 +31,8 @@ public class Main extends Application {
     private final World world = new World();
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private Pane gameWindow = new Pane();
-    
+    private Font font = new Font("Sherif", 20);
+    private int destroyedAsteroids, destroyedEnemies;
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -38,9 +40,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage window) throws Exception {
-        Text text = new Text(10, 20, "Destroyed asteroids: 0");
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
-        gameWindow.getChildren().add(text);
+        Text asteroidText = new Text(10, 20, "Destroyed asteroids: " + destroyedAsteroids);
+        Text enemyShipText = new Text(10, 20, "Destroyed enemies: " + destroyedEnemies);
+        asteroidText.setY((double) gameData.getDisplayHeight() / 20);
+        enemyShipText.setY((double) gameData.getDisplayWidth() / 10);
+        asteroidText.setFont(font);
+        enemyShipText.setFont(font);
+        gameWindow.getChildren().add(asteroidText);
+        gameWindow.getChildren().add(enemyShipText);
 
         Scene scene = new Scene(gameWindow);
         scene.setOnKeyPressed(event -> {
@@ -110,9 +118,9 @@ public class Main extends Application {
         for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
             entityProcessorService.process(gameData, world);
         }
-//        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
-//            postEntityProcessorService.process(gameData, world);
-//        }
+        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
+            postEntityProcessorService.process(gameData, world);
+        }
     }
 
     private void draw() {
