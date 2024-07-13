@@ -39,10 +39,10 @@ public class AsteroidPlugin implements IGamePluginService {
     protected Entity createAsteroid(GameData gameData) {
         Entity asteroid = new Asteroid();
         asteroid.setPolygonCoordinates(
-                -(random.nextInt(2, 25)), -(random.nextInt(2, 25)),
-                (random.nextInt(2, 25)), -(random.nextInt(2, 25)),
-                (random.nextInt(2, 25)), (random.nextInt(2, 25)),
-                -(random.nextInt(2, 25)), (random.nextInt(2, 25))
+                -(random.nextInt(10, 35)), -(random.nextInt(10, 35)),
+                (random.nextInt(10, 35)), -(random.nextInt(10, 35)),
+                (random.nextInt(10, 35)), (random.nextInt(10, 35)),
+                -(random.nextInt(10, 35)), (random.nextInt(10, 35))
         );
         asteroid.setX((double) gameData.getDisplayHeight() / 4);
         asteroid.setY((double) gameData.getDisplayWidth() / 4);

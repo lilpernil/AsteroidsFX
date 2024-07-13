@@ -49,10 +49,7 @@ public class AsteroidControlSystem implements IEntityProcessingService {
                 for (int i = 0; i < 2; i++) {
                     double[] updatedCoordinates = new double[coordinates.length];
                     for (int j = 0; j < coordinates.length; j++) {
-                        updatedCoordinates[j] = coordinates[j] - random.nextInt(1,5);
-                        if (updatedCoordinates[j] <= 2) {
-                            updatedCoordinates[j] = 2;
-                        }
+                        updatedCoordinates[j] = coordinates[j] / random.nextDouble(1.5,2);
                     }
                     Entity newAsteroid = asteroidPlugin.createAsteroid(gameData);
                     newAsteroid.setPolygonCoordinates(updatedCoordinates);

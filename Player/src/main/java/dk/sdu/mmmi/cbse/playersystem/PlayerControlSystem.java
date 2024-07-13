@@ -51,9 +51,11 @@ public class PlayerControlSystem implements IEntityProcessingService {
             if (player.isHit()) {
                 player.setLife(player.getLife() - 1);
                 player.setHit(false);
+                gameData.setPlayerLife(player.getLife());
             }
             if (player.getLife() == 0) {
                 world.removeEntity(player);
+                gameData.setPlayerLife(0);
             }
         }
     }

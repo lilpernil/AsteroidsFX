@@ -33,6 +33,8 @@ public class Main extends Application {
     private Pane gameWindow = new Pane();
     private Font font = new Font("Sherif", 20);
     private int destroyedAsteroids, destroyedEnemies;
+    private Text playerHealthText = new Text();
+    private Text enemyHealthText = new Text();
 
     public static void main(String[] args) {
         launch(Main.class);
@@ -44,11 +46,19 @@ public class Main extends Application {
         Text asteroidText = new Text(10, 20, "Destroyed asteroids: " + destroyedAsteroids);
         Text enemyShipText = new Text(10, 20, "Destroyed enemies: " + destroyedEnemies);
         asteroidText.setY((double) gameData.getDisplayHeight() / 20);
-        enemyShipText.setY((double) gameData.getDisplayWidth() / 10);
+        enemyShipText.setY((double) gameData.getDisplayHeight() / 10);
+        playerHealthText.setX((double) gameData.getDisplayHeight() / 2);
+        playerHealthText.setY((double) gameData.getDisplayWidth() / 20);
+        enemyHealthText.setX((double) gameData.getDisplayHeight() / 2);
+        enemyHealthText.setY((double) gameData.getDisplayWidth() / 10);
         asteroidText.setFont(font);
         enemyShipText.setFont(font);
+        playerHealthText.setFont(font);
+        enemyHealthText.setFont(font);
         gameWindow.getChildren().add(asteroidText);
         gameWindow.getChildren().add(enemyShipText);
+        gameWindow.getChildren().add(playerHealthText);
+        gameWindow.getChildren().add(enemyHealthText);
 
         Scene scene = new Scene(gameWindow);
         scene.setOnKeyPressed(event -> {
@@ -121,6 +131,8 @@ public class Main extends Application {
         for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
             postEntityProcessorService.process(gameData, world);
         }
+        playerHealthText.setText("Player health: " + gameData.getPlayerLife());
+        enemyHealthText.setText("Enemy health: " + gameData.getEnemyLife());
     }
 
     private void draw() {

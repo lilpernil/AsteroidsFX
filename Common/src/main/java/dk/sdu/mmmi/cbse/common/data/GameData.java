@@ -4,6 +4,8 @@ public class GameData {
 
     private int displayWidth  = 800 ;
     private int displayHeight = 800;
+    private int playerLife;
+    private int enemyLife;
     private final GameKeys keys = new GameKeys();
 
 
@@ -27,5 +29,19 @@ public class GameData {
         return displayHeight;
     }
 
+    public int getPlayerLife() {
+        return playerLife;
+    }
 
+    public int getEnemyLife() {
+        return enemyLife;
+    }
+
+    public void setPlayerLife(int playerLife) {
+        this.playerLife = playerLife;
+    }
+
+    public void setEnemyLife(int enemyLife) {
+        this.enemyLife = enemyLife;
+    }
 }

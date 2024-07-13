@@ -61,6 +61,7 @@ public class Entity implements Serializable {
 
     public Entity() {
         this.life = 1;
+        this.hit = false;
     }
 
     public int getLife() {
