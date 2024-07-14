@@ -5,6 +5,6 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 public class Asteroid extends Entity {
 
     public Asteroid() {
-        System.out.println("this is the asteroid module");
+        System.out.println("this is the bullet module");
     }
 }
