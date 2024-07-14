@@ -1,5 +1,5 @@
-import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
-import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+import dk.sdu.mmmi.cbse.common.services.gameplugin.IGamePluginService;
+import dk.sdu.mmmi.cbse.common.services.postentityprocessing.IPostEntityProcessingService;
 
 module Collision {
     requires Common;

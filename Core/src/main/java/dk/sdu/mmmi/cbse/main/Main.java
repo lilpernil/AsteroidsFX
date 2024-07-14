@@ -4,17 +4,17 @@ import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.GameKeys;
 import dk.sdu.mmmi.cbse.common.data.World;
-import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
-import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
-import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
-import java.util.ArrayList;
+import dk.sdu.mmmi.cbse.common.services.entityprocessing.EntityProcessingServiceProvider;
+import dk.sdu.mmmi.cbse.common.services.gameplugin.GamePluginServiceProvider;
+import dk.sdu.mmmi.cbse.common.services.postentityprocessing.IPostEntityProcessingService;
+
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
+
+import dk.sdu.mmmi.cbse.common.services.postentityprocessing.PostEntityProcessingServiceProvider;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -91,9 +91,8 @@ public class Main extends Application {
         });
 
         // Lookup all Game Plugins using ServiceLoader
-        for (IGamePluginService iGamePlugin : getPluginServices()) {
-            iGamePlugin.start(gameData, world);
-        }
+        GamePluginServiceProvider.getInstance().start(gameData, world);
+
         for (Entity entity : world.getEntities()) {
             Polygon polygon = new Polygon(entity.getPolygonCoordinates());
             polygons.put(entity, polygon);
@@ -124,13 +123,9 @@ public class Main extends Application {
 
     private void update() {
 
-        // Update
-        for (IEntityProcessingService entityProcessorService : getEntityProcessingServices()) {
-            entityProcessorService.process(gameData, world);
-        }
-        for (IPostEntityProcessingService postEntityProcessorService : getPostEntityProcessingServices()) {
-            postEntityProcessorService.process(gameData, world);
-        }
+        EntityProcessingServiceProvider.getInstance().process(gameData, world);
+        PostEntityProcessingServiceProvider.getInstance().process(gameData, world);
+
         playerHealthText.setText("Player health: " + gameData.getPlayerLife());
         enemyHealthText.setText("Enemy health: " + gameData.getEnemyLife());
     }
@@ -153,17 +148,5 @@ public class Main extends Application {
                 gameWindow.getChildren().remove(polygon);
             }
         });
-    }
-
-    private Collection<? extends IGamePluginService> getPluginServices() {
-        return ServiceLoader.load(IGamePluginService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IEntityProcessingService> getEntityProcessingServices() {
-        return ServiceLoader.load(IEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
-
-    private Collection<? extends IPostEntityProcessingService> getPostEntityProcessingServices() {
-        return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 }
