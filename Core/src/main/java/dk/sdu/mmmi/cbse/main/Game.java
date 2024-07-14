@@ -16,6 +16,10 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +35,7 @@ public class Game {
     private int destroyedAsteroids, destroyedEnemies;
     private Text playerHealthText = new Text();
     private Text enemyHealthText = new Text();
+    private Text asteroidsText = new Text();
     private final List<IGamePluginService> gamePluginServices;
     private final List<IEntityProcessingService> entityProcessingServices;
     private final List<IPostEntityProcessingService> postEntityProcessingServices;
@@ -47,20 +52,15 @@ public class Game {
 
     public void start(Stage window) throws Exception {
         gameWindow.setPrefSize(gameData.getDisplayWidth(), gameData.getDisplayHeight());
-        Text asteroidText = new Text(10, 20, "Destroyed asteroids: " + destroyedAsteroids);
-        Text enemyShipText = new Text(10, 20, "Destroyed enemies: " + destroyedEnemies);
-        asteroidText.setY((double) gameData.getDisplayHeight() / 20);
-        enemyShipText.setY((double) gameData.getDisplayHeight() / 10);
+        asteroidsText.setY((double) gameData.getDisplayHeight() / 20);
         playerHealthText.setX((double) gameData.getDisplayHeight() / 2);
         playerHealthText.setY((double) gameData.getDisplayWidth() / 20);
         enemyHealthText.setX((double) gameData.getDisplayHeight() / 2);
         enemyHealthText.setY((double) gameData.getDisplayWidth() / 10);
-        asteroidText.setFont(font);
-        enemyShipText.setFont(font);
+        asteroidsText.setFont(font);
         playerHealthText.setFont(font);
         enemyHealthText.setFont(font);
-        gameWindow.getChildren().add(asteroidText);
-        gameWindow.getChildren().add(enemyShipText);
+        gameWindow.getChildren().add(asteroidsText);
         gameWindow.getChildren().add(playerHealthText);
         gameWindow.getChildren().add(enemyHealthText);
 
@@ -136,6 +136,9 @@ public class Game {
         }
         playerHealthText.setText("Player health: " + gameData.getPlayerLife());
         enemyHealthText.setText("Enemy health: " + gameData.getEnemyLife());
+
+        getAsteroidScore();
+        asteroidsText.setText("Destroyed Asteroids: " + destroyedAsteroids);
     }
 
     private void draw() {
@@ -156,6 +159,25 @@ public class Game {
                 gameWindow.getChildren().remove(polygon);
             }
         });
+    }
+
+    public void getAsteroidScore() {
+        try {
+            URL url = new URL("http://localhost:8080/getasteroids");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String inputLine;
+            StringBuffer response = new StringBuffer();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            destroyedAsteroids = Integer.parseInt(String.valueOf(response));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Collection<? extends IGamePluginService> getPluginServices() {

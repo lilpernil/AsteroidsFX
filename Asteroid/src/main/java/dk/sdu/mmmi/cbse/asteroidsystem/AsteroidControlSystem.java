@@ -5,6 +5,10 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Random;
 
 public class AsteroidControlSystem implements IEntityProcessingService {
@@ -49,7 +53,7 @@ public class AsteroidControlSystem implements IEntityProcessingService {
                 for (int i = 0; i < 2; i++) {
                     double[] updatedCoordinates = new double[coordinates.length];
                     for (int j = 0; j < coordinates.length; j++) {
-                        updatedCoordinates[j] = coordinates[j] / random.nextDouble(1.5,2);
+                        updatedCoordinates[j] = coordinates[j] / random.nextDouble(1.5, 2);
                     }
                     Entity newAsteroid = asteroidPlugin.createAsteroid(gameData);
                     newAsteroid.setPolygonCoordinates(updatedCoordinates);
@@ -59,10 +63,24 @@ public class AsteroidControlSystem implements IEntityProcessingService {
                     world.addEntity(newAsteroid);
                 }
                 world.removeEntity(asteroid);
+                addScore(asteroid);
             }
             if (asteroid.getLife() == 0) {
                 world.removeEntity(asteroid);
+                addScore(asteroid);
             }
+        }
+    }
+
+    public void addScore(Entity entity) {
+        try {
+            URL url = new URL("http://localhost:8080/asteroids?score=1");
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            int responseCode = connection.getResponseCode();
+            System.out.println("Response Code: " + responseCode);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
