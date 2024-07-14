@@ -49,9 +49,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
                 player.setY(gameData.getDisplayHeight() - 1);
             }
             if (player.isHit()) {
-                player.setLife(player.getLife() - 1);
+                int newLifeValue = player.getLife() - 1;
+                player.setLife(newLifeValue);
                 player.setHit(false);
-                gameData.setPlayerLife(player.getLife());
+                gameData.setPlayerLife(newLifeValue);
             }
             if (player.getLife() == 0) {
                 world.removeEntity(player);
@@ -60,7 +61,7 @@ public class PlayerControlSystem implements IEntityProcessingService {
         }
     }
 
-    private Collection<? extends BulletSPI> getBulletSPIs() {
+    Collection<? extends BulletSPI> getBulletSPIs() {
         return ServiceLoader.load(BulletSPI.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 }
