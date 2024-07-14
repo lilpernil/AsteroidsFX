@@ -9,12 +9,23 @@ public class CollisionControlSystem implements IPostEntityProcessingService {
     @Override
     public void process(GameData gameData, World world) {
         for (Entity entity1 : world.getEntities()) {
+            String entity1Name = entity1.getClass().getName();
             for (Entity entity2 : world.getEntities()) {
-                System.out.println(entity1.getClass().getName());
+                String entity2Name = entity2.getClass().getName();
                 if (entity1.getClass() == entity2.getClass()) {
                     continue;
                 }
                 if (collisionDetected(entity1, entity2)) {
+                    if (entity1Name.contains("Asteroid")
+                            && (entity2Name.contains("Player")
+                            || entity2Name.contains("Enemy"))) {
+                        world.removeEntity(entity2);
+                    }
+                    if ((entity1Name.contains("Player")
+                            || entity1Name.contains("Enemy"))
+                            && (entity2Name.contains("Asteroid"))) {
+                        world.removeEntity(entity1);
+                    }
                     entity1.setHit(true);
                     entity2.setHit(true);
                 }
